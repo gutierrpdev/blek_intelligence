@@ -1,86 +1,91 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/* Provides Methods to manage and control a screen cursor to be used solely by player.
+ * This can be considered the main object to be controlled by the player class in a given level.
+ * For this reason, no update method is included so as to force cursor to be updated only through player calls.
+ */
 public class CursorController : MonoBehaviour
 {
-    public List<Vector2> cursorTrajectories;
-    public Transform tr;
-    public Vector2 offset; // difference between first point on current line and original first point
-    public Vector2 reference; // first point on current line
-    public int loopPosition;
-    public bool drawing;
-    public bool reflected;
-    public bool locallyReflected;
+    private List<Vector2> cursorTrajectories; // List containing all points in current trace.
+    private Transform tr;
+    private Vector2 offset; // difference between first point on current line and original first point
+    private Vector2 reference; // first point on current line
+    private int loopPosition;
+    private bool reflected;
+    private bool locallyReflected;
 
-    #region MonoBehaviorAPI
-    // Start is called before the first frame update
+    // Initialize data related to reflection and set transform reference.
     void Awake()
     {
-        drawing = true;
+        cursorTrajectories = new List<Vector2>();
         reflected = false;
         locallyReflected = false;
         tr = GetComponent<Transform>();
     }
 
-    private void Update()
+    // Moves cursor following given trajectory and reflects it when needed.
+    public void UpdateLoop()
     {
-        if (!drawing) // looping
+        if (loopPosition == 0) // update reference
         {
-            if(loopPosition == 0) // update reference
-            {
-                reference = tr.position;
-                offset = reference - cursorTrajectories[0];
-                if (locallyReflected) reflected = !reflected;
-                locallyReflected = false;
-            }
-
-            Vector2 expectedPoint = cursorTrajectories[loopPosition] + offset;
-            if (reflected) expectedPoint.x -= 2*(expectedPoint.x - reference.x); // expected next point
-
-            Vector2 cameraPoint = Camera.main.WorldToScreenPoint(expectedPoint);
-            if (cameraPoint.x < 0) // out of bounds (left side)
-            {
-                cameraPoint.x = -cameraPoint.x;
-                locallyReflected = true;
-            }
-            else if(cameraPoint.x > Screen.width) // out of bounds (right side)
-            {
-                cameraPoint.x -= 2 * (cameraPoint.x - Screen.width);
-                locallyReflected = true;
-            }
-
-            tr.position = Camera.main.ScreenToWorldPoint(cameraPoint);
-
-            loopPosition = (loopPosition + 1) % cursorTrajectories.Count;
+            reference = tr.position;
+            offset = reference - cursorTrajectories[0];
+            if (locallyReflected) reflected = !reflected;
+            locallyReflected = false;
         }
+
+        Vector2 expectedPoint = cursorTrajectories[loopPosition] + offset;
+        if (reflected) expectedPoint.x -= 2 * (expectedPoint.x - reference.x); // expected next point
+
+        Vector2 cameraPoint = Camera.main.WorldToScreenPoint(expectedPoint);
+        if (cameraPoint.x < 0) // out of bounds (left side)
+        {
+            cameraPoint.x = -cameraPoint.x;
+            locallyReflected = true;
+        }
+        else if (cameraPoint.x > Screen.width) // out of bounds (right side)
+        {
+            cameraPoint.x -= 2 * (cameraPoint.x - Screen.width);
+            locallyReflected = true;
+        }
+
+        tr.position = Camera.main.ScreenToWorldPoint(cameraPoint);
+
+        // move position in trajectory.
+        loopPosition = (loopPosition + 1) % cursorTrajectories.Count;
     }
 
-    #endregion
-
+    // Adds a new point to line if distance with last point is sufficient.
     public void UpdateLine(Vector2 newPos)
     {
-        cursorTrajectories.Add(newPos);
-        tr.position = newPos;
+        if(cursorTrajectories.Count == 0 || 
+                Vector2.Distance(cursorTrajectories[cursorTrajectories.Count - 1], newPos) > 0.005f)
+        {
+            cursorTrajectories.Add(newPos);
+            tr.position = newPos;
+        }
     }
 
     // Initialize looping process
     public void BeginLooping()
     {
         loopPosition = 0;
-        drawing = false;
         offset = cursorTrajectories[cursorTrajectories.Count - 1] - cursorTrajectories[0];
         reference = cursorTrajectories[cursorTrajectories.Count - 1];
     }
 
-    public void StopAndDestroy()
+    // Destroy cursor ensuring that trail is maintained on screen for a sufficiently long time.
+    public void DestroyCursor()
     {
         enabled = false;
         GetComponent<Collider2D>().enabled = false;
         Destroy(gameObject, GetComponent<TrailRenderer>().time);
     }
 
-    public void SetPosition(Vector2 pos)
+    // Returns current number on points on line.
+    public int PointCount()
     {
-        tr.position = pos;
+        return cursorTrajectories == null ? 0 : cursorTrajectories.Count;
     }
 }
