@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     public GameObject cursorPrefab;
     private CursorController currentCursor;
     public GameEvent restart;
+    public GameEvent drawing;
+    public GameEvent drawingStopped;
     #endregion
 
     #region state_management
@@ -15,6 +17,8 @@ public class PlayerController : MonoBehaviour
     }
 
     private State currentState;
+    private bool blackEventTriggered = false;
+    private bool ballTouchedEventTriggered = false;
 
     private void Update()
     {
@@ -27,35 +31,63 @@ public class PlayerController : MonoBehaviour
     // FSM for player states
     private void HandleInput()
     {
-        // input is provided while waiting for player touch.
-        if (currentState == State.AWAIT_INPUT && Input.GetMouseButtonDown(0))
+        if (currentState == State.AWAIT_INPUT)
         {
-            // Initialize line and begin drawing process.
-            CreateLine();
-            currentState = State.DRAW_LINE;
+            // screen touched at valid point.
+            if (Input.GetMouseButtonDown(0) && ValidPoint())
+            {
+                // Create line at given point.
+                CreateLine();
+                // Initialize line and begin drawing process.
+                currentState = State.DRAW_LINE;
+                // Notify about beginning of drawing phase.
+                drawing.Raise();
+            }
+            
         }
         // input is discontinued while drawing.
-        else if (currentState == State.DRAW_LINE && Input.GetMouseButtonUp(0))
+        else if (currentState == State.DRAW_LINE)
         {
-            // Begin looping process if line has enough points to work with.
-            if (currentCursor.PointCount() > 1)
+            // screen released and line long enough OR ballTouched event triggers.
+            if ((Input.GetMouseButtonUp(0) && currentCursor.PointCount() > 1) || ballTouchedEventTriggered)
             {
+                ballTouchedEventTriggered = false;
                 currentCursor.BeginLooping();
+                drawingStopped.Raise();
                 currentState = State.LOOP_LINE;
             }
-            // If line is not long enough, cancel drawing and wait again.
-            else
+            // screen released and line too short OR black event triggers.
+            else if ((Input.GetMouseButtonUp(0) && currentCursor.PointCount() <= 1) || blackEventTriggered)
             {
+                blackEventTriggered = false;
                 currentCursor.DestroyCursor();
+                restart.Raise();
+                drawingStopped.Raise();
                 currentState = State.AWAIT_INPUT;
             }
         }
         // input is provided while looping.
-        else if (currentState == State.LOOP_LINE && Input.GetMouseButtonDown(0))
+        else if (currentState == State.LOOP_LINE)
         {
-            currentCursor.DestroyCursor();
-            CreateLine();
-            currentState = State.DRAW_LINE;
+            // screen touched at invalid point OR black event triggered.
+            if (Input.GetMouseButtonDown(0) && !ValidPoint() || blackEventTriggered)
+            {
+                blackEventTriggered = false;
+                currentCursor.DestroyCursor();
+                restart.Raise();
+                currentState = State.AWAIT_INPUT;
+            }
+            // screen touched at valid point.
+            else if (Input.GetMouseButtonDown(0) && ValidPoint())
+            {
+                restart.Raise();
+                currentCursor.DestroyCursor();
+                // Create Line at given point.
+                CreateLine();
+                // Notify about beginning of drawing phase.
+                drawing.Raise();
+                currentState = State.DRAW_LINE;
+            }
         }
     }
 
@@ -79,8 +111,10 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region utils
     // Initialize line with original point.
-    void CreateLine()
+    // Create line at current screen touch point.
+    private void CreateLine()
     { 
         // initialize drawing
         Vector2 newPos = Input.mousePosition;
@@ -90,4 +124,23 @@ public class PlayerController : MonoBehaviour
         GameObject go = Instantiate(cursorPrefab, newPosWorld, Quaternion.identity);
         currentCursor = go.GetComponent<CursorController>();
     }
+
+    private bool ValidPoint()
+    {
+        // TODO: ensure that line does not start on top of any item on the screen.
+
+        return true;
+    }
+
+    // Sets a flag to trigger black event when checking FSM.
+    public void TriggerBlackEvent(){
+        blackEventTriggered = true;
+    }
+
+    // Sets a flag to trigger ballTouched event when checking FSM.
+    public void TriggerBallTouchedEvent()
+    {
+        ballTouchedEventTriggered = true;
+    }
+    #endregion
 }

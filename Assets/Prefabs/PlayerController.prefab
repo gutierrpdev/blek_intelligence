@@ -47,9 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorPrefab: {fileID: 5755685441288779600, guid: d8ab7c43f4d2a744f91a5301ba23ad5e,
     type: 3}
-  currentCursor: {fileID: 0}
-  remainingBalls: 0
   restart: {fileID: 11400000, guid: c13f5242ea21f644395a35887a5973f0, type: 2}
+  drawing: {fileID: 11400000, guid: bfbb7f1e9a89c554db63feff189f0430, type: 2}
+  drawingStopped: {fileID: 11400000, guid: 39e5004ea8a0d074e8605fc6c81028a3, type: 2}
 --- !u!114 &7387621474989828370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 325977803268606358}
-        m_MethodName: ResetLevel
+        m_MethodName: TriggerBlackEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -96,7 +96,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 325977803268606358}
-        m_MethodName: StopDrawing
+        m_MethodName: TriggerBallTouchedEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
