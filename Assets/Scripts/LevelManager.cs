@@ -53,18 +53,8 @@ public class LevelManager : MonoBehaviour
             stats.totalCodeAndSolveTime += Time.time - lastTimeChecked;
             stats.completed = true;
             SaveToString();
-            NextLevel();
+            FindObjectOfType<LevelChanger>().FadeToNextLevel();
         }
-    }
-
-    public void NextLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
-    public void PreviousLevel()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void SaveToString()

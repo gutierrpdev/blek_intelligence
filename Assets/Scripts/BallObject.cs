@@ -28,6 +28,7 @@ public class BallObject : MonoBehaviour
 
     private void CursorCollided()
     {
+        // Check whether ball has a spawner.
         // if it doesn't, make it fade.
         if (spawner == null)
         {
