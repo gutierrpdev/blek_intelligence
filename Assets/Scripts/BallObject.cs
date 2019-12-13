@@ -2,8 +2,7 @@
 
 public class BallObject : MonoBehaviour
 {
-    public GameEvent ballTouched;
-    public WhiteBallSpawner spawner;
+    public GameObjectEvent ballTouched;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -22,25 +21,26 @@ public class BallObject : MonoBehaviour
         // disable collider so that gameobjects can no longer interact with ball
         GetComponent<Collider2D>().enabled = false;
 
-        // and send signal
-        ballTouched.Raise();
+        // and send signal to notify that THIS ball was collided with.
+        ballTouched.Raise(this);
     }
 
     private void CursorCollided()
     {
         // Check whether ball has a spawner.
         // if it doesn't, make it fade.
-        if (spawner == null)
+        /*if (spawner == null)
         {
             GetComponent<Animator>().SetTrigger("Fade");
-        }
+        }*/
         // if it does, launch all projectiles with ball's own color.
-        else
-        {
-            GetComponent<Animator>().SetTrigger("Shrink");
-            Color whiteColor = GetComponent<SpriteRenderer>().material.color;
-            spawner.LaunchBalls(whiteColor);
-        }
+        /* else
+         {
+             GetComponent<Animator>().SetTrigger("Shrink");
+             spawner.LaunchBalls(GetColor());
+         }*/
+
+        GetComponent<Animator>().SetTrigger("Fade");
     }
 
     public void RespawnBall()
@@ -50,6 +50,11 @@ public class BallObject : MonoBehaviour
         if (GetComponent<Collider2D>().enabled) return;
         GetComponent<Collider2D>().enabled = true;
         GetComponent<Animator>().SetTrigger("Instantiate");
+    }
+
+    public Color GetColor()
+    {
+        return GetComponent<SpriteRenderer>().material.color;
     }
 
 }

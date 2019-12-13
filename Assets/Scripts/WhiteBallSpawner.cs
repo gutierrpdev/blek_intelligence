@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class WhiteBallSpawner : MonoBehaviour
 {
+    // Ball that triggers launch when touched.
+    public BallObject ballTrigger;
     public GameObject whiteBallPrefab;
     public List<float> whiteBallRotations;
-    public List<WhiteBallObject> whiteBallObjects = new List<WhiteBallObject>();
-    public List<WhiteBallObject> launchedBallObjects = new List<WhiteBallObject>();
+    private List<WhiteBallObject> whiteBallObjects = new List<WhiteBallObject>();
+    private List<WhiteBallObject> launchedBallObjects = new List<WhiteBallObject>();
 
     private void Start()
     {
@@ -15,6 +17,7 @@ public class WhiteBallSpawner : MonoBehaviour
 
     public void Spawn()
     {
+        // Remove previously launched balls.
         DestroyBalls();
         // only allow spawning if object does not have any balls under it.
         if (whiteBallObjects.Count > 0) return;
@@ -23,15 +26,10 @@ public class WhiteBallSpawner : MonoBehaviour
         for(int i = 0; i < whiteBallRotations.Count; i++)
         {
             GameObject aux = Instantiate(whiteBallPrefab);
-            Debug.Log(aux.transform.position);
-            Debug.Log(aux.transform.localPosition);
 
             // calculate position from angle.
             Vector2 dir = Quaternion.Euler(0, 0, whiteBallRotations[i]) * Vector2.right;
             dir *= 0.4f;
-            /*Debug.Log(i + ">>" + dir);
-            Debug.Log(transform.position);
-            Debug.Log(new Vector2(transform.position.x + dir.x, transform.position.y + dir.y));*/
 
             // set ball parameters.
             WhiteBallObject ball = aux.GetComponent<WhiteBallObject>();
@@ -39,6 +37,18 @@ public class WhiteBallSpawner : MonoBehaviour
             ball.SetPosition(new Vector2(transform.position.x + dir.x, transform.position.y + dir.y));
             whiteBallObjects.Add(ball);
 
+        }
+    }
+
+    // Proceed to launch only if Ball triggering the event is the one associated with this spawner.
+    public void LaunchIfBallMatch(Object obj)
+    {
+        BallObject ballObject = (BallObject) obj;
+        
+        if (ballObject == null) return;
+        else if (ballObject == ballTrigger)
+        {
+            LaunchBalls(ballObject.GetColor());
         }
     }
 
@@ -58,6 +68,7 @@ public class WhiteBallSpawner : MonoBehaviour
         whiteBallObjects = new List<WhiteBallObject>();
     }
 
+    // Destroy any previously launched ball.
     public void DestroyBalls()
     {
         for (int i = 0; i < launchedBallObjects.Count; i++)

@@ -1,0 +1,21 @@
+Dudas a Preguntar 13/11/19
+
+1. Sobre la estructura Ball/ WhiteBallSpawner> 
+	Ball no debería saber de la existencia de WhiteBallSpawner
+	WhiteBallSpawner tiene una gran dependencia con Ball (de dimensiones, color, placement...)
+	WBS Necesita saber cuándo Ball es colisionada para poder lanzar sus bolas.
+	PROBLEMA: Un evento genérico no tiene la información necesaria (BallTouched no vale aquí)
+	Solución Actual (insatisfactoria): Toda ball tiene una instancia de un WBS, que puede ser nula.
+
+2. Sobre la gestión de los niveles>
+	La única información necesaria en un nivel es el número de bolas restantes.
+	Sin embargo, también es necesario gestionar las estadísticas para la psicóloga.
+	Además, la animación tiene que poder ser gestionada en función a la información del gestor del nivel.
+	PROBLEMA: Estructura actual deja mucho que desear. Demasiadas dependencias, colocación incoherente.
+	Solución? Separar todo lo posible cada funcionalidad de la otra, pero volvemos a entrar en el 
+	problema de las dependencias. Es necesario encontrar una forma de encapsular las funcionalidades y 
+	al mismo tiempo permitir una comunicación entre componentes que no requiera de tantas conexiones a nivel
+	de componente. 
+	
+	QUIZÁ: ¿Sistema de eventos con información más precisa para las bolas?
+	Saber qué bola ha sido tocada ayuda a los spawners. Seguiría siendo necesario un mejor control.

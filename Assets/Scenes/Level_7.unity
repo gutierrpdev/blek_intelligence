@@ -259,6 +259,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 486e6ce83d502fe4a80d016d2d8d8d48, type: 3}
+--- !u!114 &603414927 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1848296470123523017, guid: 874cbacf5c166f145ad9a317688e38ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 1006777136}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e8a65c62458a7408d38171684ce57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &603414930 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5320059214584978191, guid: 874cbacf5c166f145ad9a317688e38ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 1006777136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &661541921
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -841,7 +859,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 603414930}
     m_Modifications:
     - target: {fileID: 6696240284654616874, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
@@ -886,7 +904,7 @@ PrefabInstance:
     - target: {fileID: 251908648264472759, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 251908648264472759, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
@@ -906,12 +924,12 @@ PrefabInstance:
     - target: {fileID: 251908648264472759, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 251908648264472759, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 423568059603691488, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
         type: 3}
@@ -938,6 +956,11 @@ PrefabInstance:
       propertyPath: whiteBallRotations.Array.data[1]
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 423568059603691488, guid: 9684f3b6779c2bf49aa18ccb67bce01f,
+        type: 3}
+      propertyPath: ballTrigger
+      value: 
+      objectReference: {fileID: 603414927}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9684f3b6779c2bf49aa18ccb67bce01f, type: 3}
 --- !u!114 &2090480254 stripped

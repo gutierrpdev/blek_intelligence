@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 325977803268606359}
   - component: {fileID: 325977803268606358}
   - component: {fileID: 7387621474989828370}
-  - component: {fileID: 9187034978447650057}
+  - component: {fileID: 750960856713963351}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -79,7 +79,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &9187034978447650057
+--- !u!114 &750960856713963351
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,10 +88,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 325977803268606360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2847bc6a7dd0f7944a373dc70a91a852, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ab59ef43ee47f54d9d86844480498c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 06dfa196f0119294d8fec55fa7746cbf, type: 2}
+  Event: {fileID: 11400000, guid: 93c02cfffe5ce5f42a45315466b64e4d, type: 2}
   Response:
     m_PersistentCalls:
       m_Calls:
@@ -106,5 +106,5 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+    m_TypeName: GameObjectEventResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null

@@ -1,9 +1,9 @@
 {
     "playerName": "",
     "levelNumber": 1,
-    "numberOfTrials": 1,
-    "codeAndSolveTime": 1.2366275787353516,
-    "totalCodeAndSolveTime": 1.4036591053009034,
-    "totalDrawingTime": 0.9163408279418945,
+    "numberOfTrials": 6,
+    "codeAndSolveTime": 8.394536972045899,
+    "totalCodeAndSolveTime": 71.25662994384766,
+    "totalDrawingTime": 1.1033658981323243,
     "completed": true
 }

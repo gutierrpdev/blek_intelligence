@@ -70,6 +70,8 @@ public class CursorController : MonoBehaviour
     // Initialize looping process
     public void BeginLooping()
     {
+        FrechetDistance.Test();
+        GameAnalytics.AddTrace(cursorTrajectories);
         loopPosition = 0;
         offset = cursorTrajectories[cursorTrajectories.Count - 1] - cursorTrajectories[0];
         reference = cursorTrajectories[cursorTrajectories.Count - 1];
