@@ -1,22 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     #region general_data
     public GameObject cursorPrefab;
     private CursorController currentCursor;
+
+    // GameEvents
     public GameEvent restart;
     public GameEvent drawing;
     public GameEvent drawingStopped;
     #endregion
 
     #region state_management
+    // State definitions and current state reference
     enum State
     {
         AWAIT_INPUT, DRAW_LINE, LOOP_LINE
     }
 
     private State currentState;
+
+    // Flags
     private bool blackEventTriggered = false;
     private bool ballTouchedEventTriggered = false;
 
@@ -70,7 +76,8 @@ public class PlayerController : MonoBehaviour
         else if (currentState == State.LOOP_LINE)
         {
             // screen touched at invalid point OR black event triggered.
-            if (Input.GetMouseButtonDown(0) && !ValidPoint() || blackEventTriggered)
+            if (Input.GetMouseButtonDown(0) && !ValidPoint() || blackEventTriggered || 
+                (currentCursor.IsOutOfBounds() && FindObjectOfType<LevelManager>().RemainingBalls() > 0))
             {
                 blackEventTriggered = false;
                 currentCursor.DestroyCursor();
@@ -100,7 +107,10 @@ public class PlayerController : MonoBehaviour
             case State.AWAIT_INPUT: break;
             // add screen positions to current line.
             case State.DRAW_LINE:
-                Vector2 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 newPos;
+
+                newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
                 currentCursor.UpdateLine(newPos);
                 break;
             // loop until death or new line
@@ -109,9 +119,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-    #endregion
+#endregion
 
-    #region utils
+#region utils
     // Initialize line with original point.
     // Create line at current screen touch point.
     private void CreateLine()
@@ -142,5 +152,5 @@ public class PlayerController : MonoBehaviour
     {
         ballTouchedEventTriggered = true;
     }
-    #endregion
+#endregion
 }

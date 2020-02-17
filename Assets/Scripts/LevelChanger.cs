@@ -15,7 +15,11 @@ public class LevelChanger : MonoBehaviour
     public void FadeToNextLevel()
     {
         FadeToLevel(SceneManager.GetActiveScene().buildIndex + 1);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void FadeToMenu()
+    {
+        FadeToLevel(0);
     }
 
     public void OnFadeComplete()

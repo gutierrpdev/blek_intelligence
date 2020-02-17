@@ -14,6 +14,7 @@ public class CursorController : MonoBehaviour
     private int loopPosition;
     private bool reflected;
     private bool locallyReflected;
+    private bool outOfBounds; // out of vertical bounds.
 
     // Initialize data related to reflection and set transform reference.
     void Awake()
@@ -21,6 +22,7 @@ public class CursorController : MonoBehaviour
         cursorTrajectories = new List<Vector2>();
         reflected = false;
         locallyReflected = false;
+        outOfBounds = false;
         tr = GetComponent<Transform>();
     }
 
@@ -49,6 +51,11 @@ public class CursorController : MonoBehaviour
             cameraPoint.x -= 2 * (cameraPoint.x - Screen.width);
             locallyReflected = true;
         }
+        // out of bounds (vertically) and last point in trajectory.
+        else if((cameraPoint.y > Screen.height || cameraPoint.y < 0) && loopPosition == cursorTrajectories.Count - 1)
+        {
+            outOfBounds = true;
+        }
 
         tr.position = Camera.main.ScreenToWorldPoint(cameraPoint);
 
@@ -59,19 +66,22 @@ public class CursorController : MonoBehaviour
     // Adds a new point to line if distance with last point is sufficient.
     public void UpdateLine(Vector2 newPos)
     {
-        if(cursorTrajectories.Count == 0 || 
+
+        cursorTrajectories.Add(newPos);
+        tr.position = newPos;
+        /*if(cursorTrajectories.Count == 0 || 
                 Vector2.Distance(cursorTrajectories[cursorTrajectories.Count - 1], newPos) > 0.005f)
         {
             cursorTrajectories.Add(newPos);
             tr.position = newPos;
-        }
+        }*/
     }
 
     // Initialize looping process
     public void BeginLooping()
     {
-        FrechetDistance.Test();
-        GameAnalytics.AddTrace(cursorTrajectories);
+        //FrechetDistance.Test();
+        //GameAnalytics.AddTrace(cursorTrajectories);
         loopPosition = 0;
         offset = cursorTrajectories[cursorTrajectories.Count - 1] - cursorTrajectories[0];
         reference = cursorTrajectories[cursorTrajectories.Count - 1];
@@ -89,5 +99,11 @@ public class CursorController : MonoBehaviour
     public int PointCount()
     {
         return cursorTrajectories == null ? 0 : cursorTrajectories.Count;
+    }
+
+    // Checks if cursor is out of vertical bounds.
+    public bool IsOutOfBounds()
+    {
+        return outOfBounds;
     }
 }
