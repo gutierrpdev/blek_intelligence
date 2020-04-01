@@ -8,7 +8,7 @@ public class LevelPopulator : MonoBehaviour
     private int sceneCount;
     public GameObject levelButtonPrefab;
     public GameObject contentPanel;
-    public LevelSelector selector;
+    public LevelChanger selector;
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class LevelPopulator : MonoBehaviour
         }
         else if (!selector)
         {
-            selector = FindObjectOfType<LevelSelector>();
+            selector = FindObjectOfType<LevelChanger>();
             if (!selector)
             {
                 Debug.Log("No Level Selector was assigned to LevelSelector or found in scene.");
@@ -44,7 +44,7 @@ public class LevelPopulator : MonoBehaviour
 
             int val = i;
             // select associated scene when button gets clicked.
-            button.onClick.AddListener(delegate { selector.Select(val);});
+            button.onClick.AddListener(delegate { selector.FadeToNextLevel();});
             // change button text to reflect level number.
             button.GetComponentInChildren<Text>().text = i.ToString();
         }

@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e8a65c62458a7408d38171684ce57e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballTouched: {fileID: 11400000, guid: 93c02cfffe5ce5f42a45315466b64e4d, type: 2}
+  ballTouched: {fileID: 11400000, guid: 06dfa196f0119294d8fec55fa7746cbf, type: 2}
 --- !u!95 &6734169812696778867
 Animator:
   serializedVersion: 3

@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 325977803268606359}
   - component: {fileID: 325977803268606358}
-  - component: {fileID: 7387621474989828370}
-  - component: {fileID: 750960856713963351}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -48,63 +46,6 @@ MonoBehaviour:
   cursorPrefab: {fileID: 5755685441288779600, guid: d8ab7c43f4d2a744f91a5301ba23ad5e,
     type: 3}
   restart: {fileID: 11400000, guid: c13f5242ea21f644395a35887a5973f0, type: 2}
+  firstTouch: {fileID: 11400000, guid: 149975ffb5196174cac77616a73ae9c4, type: 2}
   drawing: {fileID: 11400000, guid: bfbb7f1e9a89c554db63feff189f0430, type: 2}
-  drawingStopped: {fileID: 11400000, guid: 39e5004ea8a0d074e8605fc6c81028a3, type: 2}
---- !u!114 &7387621474989828370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325977803268606360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2847bc6a7dd0f7944a373dc70a91a852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 82e41cdfc972a864483c309ef8294d61, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 325977803268606358}
-        m_MethodName: TriggerBlackEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &750960856713963351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325977803268606360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ab59ef43ee47f54d9d86844480498c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 93c02cfffe5ce5f42a45315466b64e4d, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 325977803268606358}
-        m_MethodName: TriggerBallTouchedEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: GameObjectEventResponse, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+  looping: {fileID: 11400000, guid: ab0051e4d56b0034ca5383fe7704efd1, type: 2}

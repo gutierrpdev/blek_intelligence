@@ -163,7 +163,7 @@ TrailRenderer:
     textureMode: 2
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.1
+  m_MinVertexDistance: 0.0001
   m_Autodestruct: 0
   m_Emitting: 1
 --- !u!58 &4043095876073231490
@@ -194,11 +194,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2137a887113d444ea27466f0adcb701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorTrajectories: []
-  tr: {fileID: 0}
-  offset: {x: 0, y: 0}
-  reference: {x: 0, y: 0}
-  loopPosition: 0
-  drawing: 0
-  reflected: 0
-  locallyReflected: 0

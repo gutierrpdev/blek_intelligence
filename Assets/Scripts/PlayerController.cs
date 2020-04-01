@@ -1,30 +1,33 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     #region general_data
     public GameObject cursorPrefab;
     private CursorController currentCursor;
-
-    // GameEvents
-    public GameEvent restart;
-    public GameEvent drawing;
-    public GameEvent drawingStopped;
     #endregion
 
     #region state_management
     // State definitions and current state reference
     enum State
     {
-        AWAIT_INPUT, DRAW_LINE, LOOP_LINE
+        AWAIT_INPUT, FIRST_TOUCH, DRAW_LINE, LOOP_LINE
     }
 
     private State currentState;
+    private Vector2 firstTouchPos;
 
     // Flags
     private bool blackEventTriggered = false;
     private bool ballTouchedEventTriggered = false;
+    private bool levelCompleted = false;
+
+    private void Start()
+    {
+        EventManager.BallTouched += TriggerBallTouchedEvent;
+        EventManager.BlackTouched += TriggerBlackEvent;
+        EventManager.LevelCompleted += TriggerLevelCompletedEvent;
+    }
 
     private void Update()
     {
@@ -37,64 +40,98 @@ public class PlayerController : MonoBehaviour
     // FSM for player states
     private void HandleInput()
     {
-        if (currentState == State.AWAIT_INPUT)
+        Debug.Log(currentState);
+        switch (currentState)
         {
-            // screen touched at valid point.
-            if (Input.GetMouseButtonDown(0) && ValidPoint())
+            case State.AWAIT_INPUT: HandleAwait(); break;
+            case State.FIRST_TOUCH: HandleFirstTouch(); break;
+            case State.DRAW_LINE: HandleDrawing(); break;
+            case State.LOOP_LINE: HandleLooping(); break;
+        }
+    }
+
+    private void HandleAwait()
+    {
+        // screen touched at valid point.
+        if (Input.GetMouseButtonDown(0) && ValidPoint())
+        {
+            // register first touch position
+            firstTouchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // change to first touch to determine whether user keeps drawing.
+            currentState = State.FIRST_TOUCH;
+            EventManager.CallFirstTouch();
+        }
+    }
+
+    private void HandleFirstTouch()
+    {
+        // user keeps finger down: two cases
+        // CASE 1: User is keeping finger at exact same position -> maintain state
+        // CASE 2: User decides to move finger -> start drawing
+        if (!Input.GetMouseButtonUp(0))
+        {
+            if (!firstTouchPos.Equals(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
             {
                 // Create line at given point.
                 CreateLine();
                 // Initialize line and begin drawing process.
                 currentState = State.DRAW_LINE;
                 // Notify about beginning of drawing phase.
-                drawing.Raise();
-            }
-            
+                EventManager.CallDrawing();
+            } 
         }
-        // input is discontinued while drawing.
-        else if (currentState == State.DRAW_LINE)
+        // user lifts finger -> go back to AWAIT state.
+        else
         {
-            // screen released and line long enough OR ballTouched event triggers.
-            if ((Input.GetMouseButtonUp(0) && currentCursor.PointCount() > 1) || ballTouchedEventTriggered)
-            {
-                ballTouchedEventTriggered = false;
-                currentCursor.BeginLooping();
-                drawingStopped.Raise();
-                currentState = State.LOOP_LINE;
-            }
-            // screen released and line too short OR black event triggers.
-            else if ((Input.GetMouseButtonUp(0) && currentCursor.PointCount() <= 1) || blackEventTriggered)
-            {
-                blackEventTriggered = false;
-                currentCursor.DestroyCursor();
-                restart.Raise();
-                drawingStopped.Raise();
-                currentState = State.AWAIT_INPUT;
-            }
+            currentState = State.AWAIT_INPUT;
         }
-        // input is provided while looping.
-        else if (currentState == State.LOOP_LINE)
+    }
+
+    private void HandleDrawing()
+    {
+        // screen released OR ballTouched event triggers.
+        if (Input.GetMouseButtonUp(0) || ballTouchedEventTriggered)
         {
-            // screen touched at invalid point OR black event triggered.
-            if (Input.GetMouseButtonDown(0) && !ValidPoint() || blackEventTriggered || 
-                (currentCursor.IsOutOfBounds() && FindObjectOfType<LevelManager>().RemainingBalls() > 0))
-            {
-                blackEventTriggered = false;
-                currentCursor.DestroyCursor();
-                restart.Raise();
-                currentState = State.AWAIT_INPUT;
-            }
-            // screen touched at valid point.
-            else if (Input.GetMouseButtonDown(0) && ValidPoint())
-            {
-                restart.Raise();
-                currentCursor.DestroyCursor();
-                // Create Line at given point.
-                CreateLine();
-                // Notify about beginning of drawing phase.
-                drawing.Raise();
-                currentState = State.DRAW_LINE;
-            }
+            ballTouchedEventTriggered = false;
+            currentCursor.BeginLooping();
+            EventManager.CallLooping();
+            currentState = State.LOOP_LINE;
+        }
+        // screen released OR black event triggers.
+        else if (Input.GetMouseButtonUp(0) || blackEventTriggered)
+        {
+            blackEventTriggered = false;
+            currentCursor.DestroyCursor();
+            EventManager.CallLevelRestart();
+            currentState = State.AWAIT_INPUT;
+        }
+    }
+
+    private void HandleLooping()
+    {
+        if (levelCompleted)
+        {
+            levelCompleted = false;
+            currentCursor.DestroyCursor();
+            currentState = State.AWAIT_INPUT;
+        }
+        // black event triggered or cursor out of bounds.
+        else if (blackEventTriggered || currentCursor.IsOutOfBounds())
+        {
+            blackEventTriggered = false;
+            currentCursor.DestroyCursor();
+            EventManager.CallLevelRestart();
+            currentState = State.AWAIT_INPUT;
+        }
+        // screen touched while looping.
+        else if (Input.GetMouseButtonDown(0))
+        {
+            EventManager.CallLevelRestart();
+            currentCursor.DestroyCursor();
+            EventManager.CallFirstTouch();
+            // register first touch position
+            firstTouchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            currentState = State.FIRST_TOUCH;
         }
     }
 
@@ -103,14 +140,10 @@ public class PlayerController : MonoBehaviour
     {
         switch (currentState)
         {
-            // wait for input to be provided.
-            case State.AWAIT_INPUT: break;
             // add screen positions to current line.
             case State.DRAW_LINE:
                 Vector2 newPos;
-
                 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
                 currentCursor.UpdateLine(newPos);
                 break;
             // loop until death or new line
@@ -143,14 +176,18 @@ public class PlayerController : MonoBehaviour
     }
 
     // Sets a flag to trigger black event when checking FSM.
-    public void TriggerBlackEvent(){
+    private void TriggerBlackEvent(){
         blackEventTriggered = true;
     }
 
     // Sets a flag to trigger ballTouched event when checking FSM.
-    public void TriggerBallTouchedEvent()
-    {
+    private void TriggerBallTouchedEvent(){
         ballTouchedEventTriggered = true;
     }
-#endregion
+
+    // Sets a flag to trigger levelCompleted event when checking FSM.
+    private void TriggerLevelCompletedEvent(){
+        levelCompleted = true;
+    }
+    #endregion
 }

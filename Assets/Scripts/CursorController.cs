@@ -63,25 +63,16 @@ public class CursorController : MonoBehaviour
         loopPosition = (loopPosition + 1) % cursorTrajectories.Count;
     }
 
-    // Adds a new point to line if distance with last point is sufficient.
+    // Adds a new point to line.
     public void UpdateLine(Vector2 newPos)
     {
-
         cursorTrajectories.Add(newPos);
         tr.position = newPos;
-        /*if(cursorTrajectories.Count == 0 || 
-                Vector2.Distance(cursorTrajectories[cursorTrajectories.Count - 1], newPos) > 0.005f)
-        {
-            cursorTrajectories.Add(newPos);
-            tr.position = newPos;
-        }*/
     }
 
     // Initialize looping process
     public void BeginLooping()
     {
-        //FrechetDistance.Test();
-        //GameAnalytics.AddTrace(cursorTrajectories);
         loopPosition = 0;
         offset = cursorTrajectories[cursorTrajectories.Count - 1] - cursorTrajectories[0];
         reference = cursorTrajectories[cursorTrajectories.Count - 1];

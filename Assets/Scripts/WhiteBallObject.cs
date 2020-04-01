@@ -3,23 +3,29 @@
 public class WhiteBallObject : MonoBehaviour
 {
 
-    public Vector2 velocity = new Vector2(0, 0);
+    private Vector2 projectileDirection;
+    private float speed;
 
     private void Update()
     {
-        float newX = transform.position.x + velocity.x * Time.deltaTime;
-        float newY = transform.position.y + velocity.y * Time.deltaTime;
-        transform.position = new Vector3(newX, newY, transform.position.z);    
+        transform.Translate(projectileDirection * Time.deltaTime * speed, Space.World);
     }
 
     private void Start()
     {
+        EventManager.LevelRestart += DestroyProjectile;
         SetActive(false);
+        SetProjectileDirection(new Vector2(0, 0));
     }
 
-    public void SetVelocity(Vector2 velocity)
+    public void SetProjectileDirection(Vector2 direction)
     {
-        this.velocity = velocity;
+        projectileDirection = direction;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
     }
 
     public void SetActive(bool active)
@@ -31,16 +37,6 @@ public class WhiteBallObject : MonoBehaviour
         }
     }
 
-    public void SetPosition(Vector2 position)
-    {
-        transform.position = new Vector3(position.x, position.y, transform.position.z);
-    }
-
-    public Vector2 GetPosition()
-    {
-        return new Vector2(transform.position.x, transform.position.y);
-    }
-
     public void SetColor(Color color)
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
@@ -50,6 +46,20 @@ public class WhiteBallObject : MonoBehaviour
     public void SetParent(Transform t)
     {
         transform.SetParent(t);
+    }
+
+    private void DestroyProjectile()
+    {
+        Collider2D col = GetComponent<Collider2D>();
+        if (col.enabled)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnDisable()
+    {
+        EventManager.LevelRestart -= DestroyProjectile;
     }
 
 }
