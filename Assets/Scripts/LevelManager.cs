@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     }
 
     // decrease by one the number of active balls in scene.
-    private void DecreaseBallCount()
+    private void DecreaseBallCount(BallObject ball)
     {
         remainingBalls--;
         // upon successfull removal of all active balls, notify about level completion.

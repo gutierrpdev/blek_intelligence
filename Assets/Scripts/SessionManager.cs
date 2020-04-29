@@ -8,7 +8,7 @@ public class SessionManager : MonoBehaviour
 
     #region server_management
     private ServerEventManager eventManager;
-    private const string url = "http://tfg.padaonegames.com/event";
+    private const string url = "https://intelligence-assessment-tfg.herokuapp.com";
     #endregion
 
     #region session_data
@@ -21,6 +21,7 @@ public class SessionManager : MonoBehaviour
     public const string BEGIN_LOOPING = "BEGIN_LOOPING";
     public const string BLACK_TOUCHED = "BLACK_TOUCHED";
     public const string RESTART_LEVEL = "RESTART_LEVEL";
+    public const string FIRST_TOUCH = "FIRST_TOUCH";
     #endregion
 
 
@@ -48,6 +49,7 @@ public class SessionManager : MonoBehaviour
         EventManager.Drawing += BeginDrawing;
         EventManager.Looping += BeginLooping;
         EventManager.LevelRestart += RestartLevel;
+        EventManager.FirstTouch += FirstTouch;
     }
 
     // sets current user's id.
@@ -87,6 +89,11 @@ public class SessionManager : MonoBehaviour
         LogEvent(BLACK_TOUCHED);
     }
 
+    private void FirstTouch()
+    {
+        LogEvent(FIRST_TOUCH);
+    }
+
     private void RestartLevel()
     {
         LogEvent(RESTART_LEVEL);
@@ -120,7 +127,8 @@ public class SessionManager : MonoBehaviour
     private void LogEvent(string eventName, ServerEventParameter[] parameters = null)
     {
         ServerEvent gameEvent = new ServerEvent(userId, CurrentTimestamp(), gameName, eventName, parameters);
-        eventManager.LogEvent(gameEvent);
+        ServerEvent result = eventManager.LogEvent(gameEvent);
+        Debug.Log(result);
     }
 
     private int CurrentTimestamp()

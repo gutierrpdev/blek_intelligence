@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private State currentState;
     private Vector2 firstTouchPos;
+    private BallObject firstTouchBall;
 
     // Flags
     private bool blackEventTriggered = false;
@@ -41,6 +42,12 @@ public class PlayerController : MonoBehaviour
     private void HandleInput()
     {
         Debug.Log(currentState);
+        //cheat 
+        if(Input.touches.Length >= 3)
+        {
+            EventManager.CallLevelCompleted();
+            return;
+        }
         switch (currentState)
         {
             case State.AWAIT_INPUT: HandleAwait(); break;
@@ -68,7 +75,7 @@ public class PlayerController : MonoBehaviour
         // user keeps finger down: two cases
         // CASE 1: User is keeping finger at exact same position -> maintain state
         // CASE 2: User decides to move finger -> start drawing
-        if (!Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButton(0))
         {
             if (!firstTouchPos.Equals(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
             {
@@ -92,13 +99,19 @@ public class PlayerController : MonoBehaviour
         // screen released OR ballTouched event triggers.
         if (Input.GetMouseButtonUp(0) || ballTouchedEventTriggered)
         {
+            // adapt curve to end at center of touched ball.
+            if (ballTouchedEventTriggered)
+            {
+                InterpolateLine();
+            }
             ballTouchedEventTriggered = false;
+            firstTouchBall = null;
             currentCursor.BeginLooping();
             EventManager.CallLooping();
             currentState = State.LOOP_LINE;
         }
-        // screen released OR black event triggers.
-        else if (Input.GetMouseButtonUp(0) || blackEventTriggered)
+        // black event triggers.
+        else if (blackEventTriggered)
         {
             blackEventTriggered = false;
             currentCursor.DestroyCursor();
@@ -168,6 +181,19 @@ public class PlayerController : MonoBehaviour
         currentCursor = go.GetComponent<CursorController>();
     }
 
+    private void InterpolateLine()
+    {
+        Vector2 firstPos;
+        firstPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 lastPos = firstTouchBall.transform.position;
+        Vector2 lineVect = lastPos - firstPos;
+
+        for(int i = 0; i < 25; i++)
+        {
+            currentCursor.UpdateLine(firstPos + lineVect * (i/25f));
+        }
+    }
+
     private bool ValidPoint()
     {
         // TODO: ensure that line does not start on top of any item on the screen.
@@ -181,8 +207,12 @@ public class PlayerController : MonoBehaviour
     }
 
     // Sets a flag to trigger ballTouched event when checking FSM.
-    private void TriggerBallTouchedEvent(){
-        ballTouchedEventTriggered = true;
+    private void TriggerBallTouchedEvent(BallObject ball){
+        if (currentState != State.LOOP_LINE)
+        {
+            ballTouchedEventTriggered = true;
+            firstTouchBall = ball;
+        }
     }
 
     // Sets a flag to trigger levelCompleted event when checking FSM.

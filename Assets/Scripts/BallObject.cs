@@ -48,7 +48,7 @@ public class BallObject : MonoBehaviour
         GetComponent<Collider2D>().enabled = false;
 
         // and send signal to notify that ball was collided with.
-        EventManager.CallBallTouched();
+        EventManager.CallBallTouched(this);
     }
 
 

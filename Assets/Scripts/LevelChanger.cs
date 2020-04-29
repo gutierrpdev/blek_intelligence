@@ -68,19 +68,21 @@ public class LevelChanger : MonoBehaviour
             // of level set and must notify our session manager about the end of the session/tutorial.
             if(type == SESSION_LEVEL)
             {
-                SessionManager.instance.ExperimentEnd();
+                SessionManager.instance?.LevelEnd(number);
+                SessionManager.instance?.ExperimentEnd();
             }
             else if(type == TUTORIAL_LEVEL)
             {
-                SessionManager.instance.TutorialEnd();
+                SessionManager.instance?.LevelEnd(number);
+                SessionManager.instance?.TutorialEnd();
             }
         }
         else if(type == SESSION_LEVEL || type == TUTORIAL_LEVEL)
         {
             // if levels are within session or tutorial sets, notify the session manager of level start/end
             // with appropriate numbers
-            SessionManager.instance.LevelEnd(number);
-            SessionManager.instance.LevelStart(number + 1);
+            SessionManager.instance?.LevelEnd(number);
+            SessionManager.instance?.LevelStart(number + 1);
         }
 
         // proceed with fadeout. end-of-animation event will trigger actual scene change with
@@ -106,13 +108,13 @@ public class LevelChanger : MonoBehaviour
             // Notify the session manager about level start.
             if (type == SESSION_LEVEL)
             {
-                SessionManager.instance.ExperimentStart();
-                SessionManager.instance.LevelStart(0);
+                SessionManager.instance?.ExperimentStart();
+                SessionManager.instance?.LevelStart(0);
             }
             else if (type == TUTORIAL_LEVEL)
             {
-                SessionManager.instance.TutorialStart();
-                SessionManager.instance.LevelStart(0);
+                SessionManager.instance?.TutorialStart();
+                SessionManager.instance?.LevelStart(0);
             }
         }
 

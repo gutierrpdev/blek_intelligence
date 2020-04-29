@@ -10,7 +10,7 @@ public class EventManager{
     public static event Action LevelCompleted;
     public static event Action TimeUp;
     public static event Action Drawing;
-    public static event Action BallTouched;
+    public static event Action<BallObject> BallTouched;
     public static event Action BlackTouched;
 
     public static void CallLevelRestart()
@@ -53,9 +53,9 @@ public class EventManager{
         Drawing?.Invoke();
     }
 
-    public static void CallBallTouched()
+    public static void CallBallTouched(BallObject ball)
     {
-        BallTouched?.Invoke();
+        BallTouched?.Invoke(ball);
     }
 
     public static void CallBlackTouched()
