@@ -28,7 +28,7 @@ public class TextChanger : MonoBehaviour
         }
         else
         {
-            LevelChanger.instance.FadeToLevelSet(LevelChanger.MAIN_MENU);
+            LevelChanger.instance.FadeToLevelSet(LevelChanger.TUTORIAL_MENU);
         }
     }
 }

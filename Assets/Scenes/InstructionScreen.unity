@@ -228,7 +228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &496744602 stripped
 GameObject:
@@ -298,27 +298,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   texts:
-  - "Para jugar tienes que coger el dispositivo de forma horizontal y usar el dedo.
-    Tu objetivo es explotar los  c\xEDrculos de colores sin tocar los negros. "
+  - "Para jugar deber\xE1s dibujar en pantalla con el rat\xF3n. Tu objetivo es explotar
+    los c\xEDrculos de colores sin tocar los negros. "
   - "Para ello tendr\xE1s que dibujar una l\xEDnea de cualquier forma y tama\xF1o.
     Cuando termines, cobrar\xE1 vida y avanzar\xE1 repitiendo el movimiento que dibujaste."
-  - "Si fallas, puedes pulsar brevemente sobre la pantalla para reiniciar el nivel.
-    En muchos niveles encontrar\xE1s puntos negros m\xE1s peque\xF1os que te sirven
-    de pista para saber qu\xE9 tipo de dibujo debes realizar."
-  - "Hay algunos niveles en los que las bolas de colores contienen una peque\xF1a
-    bola blanca que disparan cuando explotan. Estas bolas blancas tienen la capacidad
-    de eliminar las bolas de colores y atravesar las negras. \xDAsalas para destruir
-    otras bolas sin que sean tocadas por tu linea."
-  - "Comenzaremos con una serie de niveles a modo de tutorial para que te habit\xFAes
-    a los comandos. Despu\xE9s pasaremos a los niveles de sesi\xF3n y tendr\xE1s
-    10 minutos para resolver todos los niveles que puedas. No hay un l\xEDmite de
-    intentos por nivel."
-  - "Para comenzar el tutorial, presiona el bot\xF3n \"Start Tutorial\" que encontrar\xE1s
-    en la pantalla siguiente. Cuando termines el tutorial, por favor, selecciona
-    \"Start Session\" para dar comienzo a los niveles de la sesi\xF3n. Desde ese
-    momento comenzar\xE1 la cuenta atr\xE1s de 10 minutos para completar todos los
-    niveles que puedas. No hay tiempo l\xEDmite para completar el tutorial."
-  - "Muy buena suerte, y muchas gracias por tu participaci\xF3n en esta sesi\xF3n."
   textField: {fileID: 1755914508}
 --- !u!1 &1113004039
 GameObject:
@@ -453,6 +436,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113004039}
   m_CullTransparentMesh: 0
+--- !u!1001 &1164949006
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3152121364315307557, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_Name
+      value: WebSessionManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964718608453245987, guid: a0f9961b3c9201e4882c1f8cb2adb728,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a0f9961b3c9201e4882c1f8cb2adb728, type: 3}
 --- !u!1 &1339855732
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +584,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1388671908
 PrefabInstance:
@@ -868,6 +920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 741578672415968755, guid: d9a730bafb0658d4ba9ee1b6e059db6f,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2349907319028329165, guid: d9a730bafb0658d4ba9ee1b6e059db6f,
         type: 3}

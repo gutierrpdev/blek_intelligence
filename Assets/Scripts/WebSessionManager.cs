@@ -1,18 +1,12 @@
 ﻿using UnityEngine;
-using ServerEvents;
 using System;
+using System.Runtime.InteropServices;
 
-public class SessionManager : MonoBehaviour
+public class WebSessionManager : MonoBehaviour
 {
-    public static SessionManager instance = null;
-
-    #region server_management
-    private ServerEventManager eventManager;
-    private const string url = "https://intelligence-assessment-tfg.herokuapp.com";
-    #endregion
+    public static WebSessionManager instance = null;
 
     #region session_data
-    private string userId;
     private const string gameName = "Blek";
     private int orderInSequence = 0;
     #endregion
@@ -25,13 +19,17 @@ public class SessionManager : MonoBehaviour
     public const string FIRST_TOUCH = "FIRST_TOUCH";
     #endregion
 
+    [DllImport("__Internal")]
+    private static extern void LogGameEvent(string eventJSON);
+
+    [DllImport("__Internal")]
+    private static extern void GameOver();
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            // initialize event manager using server's events endpoint.
-            eventManager = new ServerEventManager(url);
             // Make sure session manager persists between scenes.
             DontDestroyOnLoad(gameObject);
         }
@@ -50,28 +48,23 @@ public class SessionManager : MonoBehaviour
         EventManager.Looping += BeginLooping;
         EventManager.LevelRestart += RestartLevel;
         EventManager.FirstTouch += FirstTouch;
+        EventManager.TimeUp += ExperimentEnd;
     }
 
-    // sets current user's id.
-    public void SetUserId(string id)
-    {
-        userId = id;
-    }
-
-#region event_methods
+    #region event_methods
 
     public void LevelStart(int levelNumber)
     {
-        ServerEventParameter[] parameters =
-            {new ServerEventParameter(ServerEventParameter.LEVEL_NUMBER, levelNumber.ToString())};
-        LogEvent(ServerEvent.LEVEL_START, parameters);
+        WebEventParameter[] parameters =
+            {new WebEventParameter(WebEventParameter.LEVEL_NUMBER, levelNumber.ToString())};
+        LogEvent(WebEvent.LEVEL_START, parameters);
     }
 
     public void LevelEnd(int levelNumber)
     {
-        ServerEventParameter[] parameters =
-            {new ServerEventParameter(ServerEventParameter.LEVEL_NUMBER, levelNumber.ToString())};
-        LogEvent(ServerEvent.LEVEL_END, parameters);
+        WebEventParameter[] parameters =
+            {new WebEventParameter(WebEventParameter.LEVEL_NUMBER, levelNumber.ToString())};
+        LogEvent(WebEvent.LEVEL_END, parameters);
     }
 
     private void BeginDrawing()
@@ -101,35 +94,45 @@ public class SessionManager : MonoBehaviour
 
     public void TutorialStart()
     {
-        LogEvent(ServerEvent.TUTORIAL_START);
+        LogEvent(WebEvent.TUTORIAL_START);
     }
 
     public void TutorialEnd()
     {
-        LogEvent(ServerEvent.TUTORIAL_END);
+        LogEvent(WebEvent.TUTORIAL_END);
     }
 
     public void ExperimentStart()
     {
         EventManager.CallSessionStart();
-        LogEvent(ServerEvent.EXPERIMENT_START);
+        LogEvent(WebEvent.EXPERIMENT_START);
     }
 
     public void ExperimentEnd()
     {
         EventManager.CallSessionEnd();
-        LogEvent(ServerEvent.EXPERIMENT_END);
+        LogEvent(WebEvent.EXPERIMENT_END);
+        // notify browser about game end
+        Debug.Log("Game Over");
+        GameOver();
+        Application.Quit();
     }
 
-#endregion
+    #endregion
 
-    // fill event data with general information to be shared between all events logged from current session.
-    private void LogEvent(string eventName, ServerEventParameter[] parameters = null)
+    private void LogEvent(string eventName, WebEventParameter[] parameters = null)
     {
-        ServerEvent gameEvent = new ServerEvent(userId, CurrentTimestamp(), gameName, eventName, parameters);
-        eventManager.LogEvent(gameEvent);
+        WebEvent webEvent = new WebEvent
+        {
+            name = eventName,
+            parameters = parameters,
+            timestamp = CurrentTimestamp(),
+            gameName = gameName,
+            orderInSequence = orderInSequence
+        };
+        orderInSequence++;
+        LogGameEvent(JsonUtility.ToJson(webEvent));
     }
-
     private int CurrentTimestamp()
     {
         return (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;

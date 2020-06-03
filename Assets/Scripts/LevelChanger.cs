@@ -12,6 +12,8 @@ public class LevelChanger : MonoBehaviour
     public const string TUTORIAL_LEVEL = "Tutorial";
     public const string SESSION_LEVEL = "Session";
     public const string MAIN_MENU = "MainMenu";
+    public const string TUTORIAL_MENU = "TutorialMenu";
+    public const string SESSION_MENU = "SessionMenu";
     public const string USER_MENU = "UserMenu";
     public const string INSTRUCTION_SCREEN = "InstructionScreen";
     #endregion
@@ -33,7 +35,7 @@ public class LevelChanger : MonoBehaviour
 
     public void Start()
     {
-        EventManager.TimeUp += FadeToMainMenu;
+        //EventManager.TimeUp += FadeToMainMenu;
         EventManager.LevelCompleted += FadeToNextLevel;
     }
 
@@ -62,27 +64,30 @@ public class LevelChanger : MonoBehaviour
         // if no such scene could be found, load main menu.
         if (!levelExists)
         {
-            levelToLoad = MAIN_MENU;
-
             // if original set type was tutorial or session, we have reached the last level
             // of level set and must notify our session manager about the end of the session/tutorial.
             if(type == SESSION_LEVEL)
             {
-                SessionManager.instance?.LevelEnd(number);
-                SessionManager.instance?.ExperimentEnd();
+                WebSessionManager.instance?.LevelEnd(number);
+                WebSessionManager.instance?.ExperimentEnd();
             }
             else if(type == TUTORIAL_LEVEL)
             {
-                SessionManager.instance?.LevelEnd(number);
-                SessionManager.instance?.TutorialEnd();
+                levelToLoad = SESSION_MENU;
+                WebSessionManager.instance?.LevelEnd(number);
+                WebSessionManager.instance?.TutorialEnd();
+            }
+            else
+            {
+                levelToLoad = TUTORIAL_MENU;
             }
         }
         else if(type == SESSION_LEVEL || type == TUTORIAL_LEVEL)
         {
             // if levels are within session or tutorial sets, notify the session manager of level start/end
             // with appropriate numbers
-            SessionManager.instance?.LevelEnd(number);
-            SessionManager.instance?.LevelStart(number + 1);
+            WebSessionManager.instance?.LevelEnd(number);
+            WebSessionManager.instance?.LevelStart(number + 1);
         }
 
         // proceed with fadeout. end-of-animation event will trigger actual scene change with
@@ -95,7 +100,9 @@ public class LevelChanger : MonoBehaviour
         // attempt to load first level of selected level set.
         levelToLoad = (type == MAIN_MENU)? MAIN_MENU : 
             (type == USER_MENU ? USER_MENU :
-            (type == INSTRUCTION_SCREEN ? INSTRUCTION_SCREEN : type + "_0"));
+            (type == TUTORIAL_MENU ? TUTORIAL_MENU :
+            (type == SESSION_MENU ? SESSION_MENU :
+            (type == INSTRUCTION_SCREEN ? INSTRUCTION_SCREEN : type + "_0"))));
 
         // check if levelToLoad scene exists in project.
         bool setExists = SceneUtility.GetBuildIndexByScenePath(levelToLoad) >= 0;
@@ -108,13 +115,13 @@ public class LevelChanger : MonoBehaviour
             // Notify the session manager about level start.
             if (type == SESSION_LEVEL)
             {
-                SessionManager.instance?.ExperimentStart();
-                SessionManager.instance?.LevelStart(0);
+                WebSessionManager.instance?.ExperimentStart();
+                WebSessionManager.instance?.LevelStart(0);
             }
             else if (type == TUTORIAL_LEVEL)
             {
-                SessionManager.instance?.TutorialStart();
-                SessionManager.instance?.LevelStart(0);
+                WebSessionManager.instance?.TutorialStart();
+                WebSessionManager.instance?.LevelStart(0);
             }
         }
 

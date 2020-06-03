@@ -5,14 +5,17 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/UserMenu.unity
     guid: 73632d5aec5d48a44aeb41aff7f4c7bc
   - enabled: 1
     path: Assets/Scenes/InstructionScreen.unity
     guid: 0d821c67a16852a4ca58010c46530b10
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/Scenes/TutorialMenu.unity
+    guid: 744e3acbb72a05246920d5d5d3a3cebd
+  - enabled: 1
+    path: Assets/Scenes/SessionMenu.unity
     guid: 6de22232184d4c240a7d284525317fe9
   - enabled: 1
     path: Assets/Scenes/Tutorial/Tutorial_0.unity
@@ -102,9 +105,21 @@ EditorBuildSettings:
     path: Assets/Scenes/Session/Session_20.unity
     guid: 5c1763f345a2a17409cc573227ff72f3
   - enabled: 1
+    path: Assets/Scenes/Session/Session_21.unity
+    guid: 992359be4366f7e46ac991e4b3806596
+  - enabled: 1
     path: Assets/Scenes/Session/Session_22.unity
     guid: 019516273239fb04a94e3264365e8ccd
   - enabled: 1
-    path: Assets/Scenes/Session/Session_21.unity
-    guid: 992359be4366f7e46ac991e4b3806596
+    path: Assets/Scenes/Session/Session_23.unity
+    guid: aaad3bc12abd6544cb0879b9c6fb527b
+  - enabled: 1
+    path: Assets/Scenes/Session/Session_24.unity
+    guid: 6938f62efe883164d9e3c154dcae827d
+  - enabled: 1
+    path: Assets/Scenes/Session/Session_25.unity
+    guid: 26aad6d74ee8d4a4181486aa9eb5416a
+  - enabled: 1
+    path: Assets/Scenes/Session/Session_26.unity
+    guid: 292a5f5179e43ad4a925688a807dfd6b
   m_configObjects: {}

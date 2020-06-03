@@ -16,6 +16,7 @@ public class Timer : MonoBehaviour
 
     private void StartTimer()
     {
+        Debug.Log("Start timer");
         GetComponent<CanvasGroup>().alpha = 1;
         secondsLeft = 600f;
     }

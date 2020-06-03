@@ -14,7 +14,7 @@ public class BallWithProjectiles : BallObject
     private void Start()
     {
         float halfHorizontalSize = GetComponent<SpriteRenderer>().bounds.extents.x;
-        spawnPosition = transform.position + new Vector3(halfHorizontalSize * 3 / 5, 0, 0);
+        spawnPosition = transform.position + new Vector3(halfHorizontalSize * 13 / 20, 0, 0);
         initialPosition = transform.rotation;
         Spawn();
 
@@ -52,8 +52,19 @@ public class BallWithProjectiles : BallObject
             aux.SetParent(null);
             // set direction and speed parameters
             aux.SetProjectileDirection(aux.transform.position - transform.position);
-            aux.SetSpeed(5f);
+            aux.SetSpeed(15f);
         }
+    }
+
+    private void DestroyBalls()
+    {
+        WhiteBallObject[] whiteBallObjects = gameObject.GetComponentsInChildren<WhiteBallObject>();
+        for (int i = 0; i < whiteBallObjects.Length; i++)
+        {
+            WhiteBallObject aux = whiteBallObjects[i];
+            Destroy(aux.gameObject);
+        }
+        whiteBallObjects = null;
     }
 
     protected override void AfterCollision()
@@ -70,8 +81,11 @@ public class BallWithProjectiles : BallObject
         GetComponent<Animator>().ResetTrigger("Shrink");
         GetComponent<Animator>().ResetTrigger("Fade");
 
+        DestroyBalls();
+
+
         // if collider is enabled, ball hasn't been collided with yet, and so we don't need to spawn it again.
-        if (GetComponent<Collider2D>().enabled) return;
+        // if (GetComponent<Collider2D>().enabled) return;
 
         // enable collider and play instantiation clip.
         GetComponent<Collider2D>().enabled = true;
